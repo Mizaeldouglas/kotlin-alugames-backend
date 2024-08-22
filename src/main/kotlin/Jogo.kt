@@ -1,6 +1,4 @@
-import com.google.gson.annotations.SerializedName
-
-class Jogo(var titulo: String, var capa: String)   {
+data class Jogo(var titulo: String, var capa: String)   {
     var descricao = ""
 
     override fun toString() = """
