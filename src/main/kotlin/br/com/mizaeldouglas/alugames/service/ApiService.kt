@@ -1,7 +1,6 @@
 package br.com.mizaeldouglas.alugames.service
 
-import br.com.mizaeldouglas.alugames.model.InfoJogo
-import br.com.mizaeldouglas.alugames.model.Jogo
+import br.com.mizaeldouglas.alugames.model.game.InfoGame
 import com.google.gson.Gson
 import java.net.URI
 import java.net.http.HttpClient
@@ -9,7 +8,7 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse.BodyHandlers
 
 class ApiService {
-    fun buscaJogo(id: String): InfoJogo{
+    fun searchGame(id: String): InfoGame {
         val url = "https://www.cheapshark.com/api/1.0/games?id=${id}"
         val client: HttpClient = HttpClient.newHttpClient()
 
@@ -23,12 +22,10 @@ class ApiService {
 
         val gson = Gson()
 
-        val meuInfoJogo = gson.fromJson(json, InfoJogo::class.java)
+        val myInfoGame = gson.fromJson(json, InfoGame::class.java)
 
-        return meuInfoJogo
+        return myInfoGame
     }
-
-
 
 
 }

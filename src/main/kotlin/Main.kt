@@ -1,4 +1,4 @@
-import br.com.mizaeldouglas.alugames.model.Jogo
+import br.com.mizaeldouglas.alugames.model.game.Game
 import br.com.mizaeldouglas.alugames.service.ApiService
 import java.util.*
 
@@ -8,15 +8,15 @@ fun main() {
     val sc = Scanner(System.`in`)
 
     println("Digite um codigo de jogo para buscar: ")
-    val busca = sc.nextLine()
+    val search = sc.nextLine()
 
-    var meuJogo: Jogo? = null
+    var myGame: Game? = null
 
     val result = runCatching {
-        val meuInfoJogo = api.buscaJogo(busca)
-        meuJogo = Jogo(
-            meuInfoJogo.info.title,
-            meuInfoJogo.info.thumb)
+        val myInfoGame = api.searchGame(search)
+        myGame = Game(
+            myInfoGame.info.title,
+            myInfoGame.info.thumb)
     }
 
     result.onFailure {
@@ -28,14 +28,14 @@ fun main() {
         val opcao = sc.nextLine().uppercase()
         if (opcao.equals("S", true)){
             println("Digite a descrição personalizada para o jogo: ")
-            val descricaoPersonalizada = sc.nextLine()
-            meuJogo?.descricao = descricaoPersonalizada
+            val descriptionCustom = sc.nextLine()
+            myGame?.description = descriptionCustom
         }else{
-            meuJogo?.descricao = meuJogo?.titulo.toString()
+            myGame?.description = myGame?.title.toString()
         }
     }
 
-    println(meuJogo)
+    println(myGame)
 
     result.onSuccess {
         println("\nBusca  Finalizado com sucesso!!")
