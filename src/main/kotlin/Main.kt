@@ -1,26 +1,43 @@
-import com.google.gson.Gson
-import java.net.URI
-import java.net.http.HttpClient
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse.BodyHandlers
+import br.com.mizaeldouglas.alugames.model.Jogo
+import br.com.mizaeldouglas.alugames.service.ApiService
+import java.util.*
 
 
 fun main() {
-    val client: HttpClient = HttpClient.newHttpClient()
-    val gson = Gson()
+    val api = ApiService()
+    val sc = Scanner(System.`in`)
 
-    val request = HttpRequest.newBuilder()
-        .uri(URI.create("https://www.cheapshark.com/api/1.0/games?id=146"))
-        .build()
-    val response = client
-        .send(request, BodyHandlers.ofString())
+    println("Digite um codigo de jogo para buscar: ")
+    val busca = sc.nextLine()
 
-    val json = response.body()
+    var meuJogo: Jogo? = null
 
-    val meuInfoJogo = gson.fromJson(json, infoJogo::class.java)
+    val result = runCatching {
+        val meuInfoJogo = api.buscaJogo(busca)
+        meuJogo = Jogo(
+            meuInfoJogo.info.title,
+            meuInfoJogo.info.thumb)
+    }
 
-    val meuJogo = Jogo(meuInfoJogo.info.title, meuInfoJogo.info.thumb)
+    result.onFailure {
+        println("Jogo inexistente. Tente outro id.")
+    }
+
+    result.onSuccess {
+        println("Deseja inserir uma descrição personalizada? S/N")
+        val opcao = sc.nextLine().uppercase()
+        if (opcao.equals("S", true)){
+            println("Digite a descrição personalizada para o jogo: ")
+            val descricaoPersonalizada = sc.nextLine()
+            meuJogo?.descricao = descricaoPersonalizada
+        }else{
+            meuJogo?.descricao = meuJogo?.titulo.toString()
+        }
+    }
 
     println(meuJogo)
 
+    result.onSuccess {
+        println("\nBusca  Finalizado com sucesso!!")
+    }
 }
